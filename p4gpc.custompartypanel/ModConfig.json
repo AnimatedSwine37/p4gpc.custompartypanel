@@ -1,0 +1,20 @@
+{
+  "ModId": "p4gpc.custompartypanel",
+  "ModName": "Persona 4 Golden Custom Party Panel",
+  "ModAuthor": "AnimatedSwine37",
+  "ModVersion": "1.0.0",
+  "ModDescription": "Allows customisation of hardcoded elements of the party panel",
+  "ModDll": "p4gpc.custompartypanel.dll",
+  "ModIcon": "Preview.png",
+  "ModR2RManagedDll32": "",
+  "ModR2RManagedDll64": "",
+  "ModNativeDll32": "",
+  "ModNativeDll64": "",
+  "IsLibrary": false,
+  "ReleaseMetadataFileName": "Sewer56.Update.ReleaseMetadata.json",
+  "PluginData": {},
+  "IsUniversalMod": false,
+  "ModDependencies": ["reloaded.sharedlib.hooks"],
+  "OptionalDependencies": [],
+  "SupportedAppId": ["p4g.exe"]
+}
