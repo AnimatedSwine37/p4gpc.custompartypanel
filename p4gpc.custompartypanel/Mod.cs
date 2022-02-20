@@ -24,6 +24,7 @@ namespace p4gpc.custompartypanel
         private IAsmHook _inBtlHpBarHook;
         private IAsmHook _commandCircleHook;
         private IAsmHook _commandCircleTextHook;
+        private IAsmHook _dungeonHook;
 
         private string _setCommandCircleColourCall;
 
@@ -31,6 +32,7 @@ namespace p4gpc.custompartypanel
         private IReverseWrapper<SetBgColourFunction> _setBgColourReverseWrapper;
         private IReverseWrapper<SetHpBgColourFunction> _setHpBgColourReverseWrapper;
         private IReverseWrapper<SetCommandCircleColourFunction> _setCommandCircleColourReverseWrapper;
+        private IReverseWrapper<SetInDungeonColoursFunction> _setInDungeonColoursReverseWrapper;
 
         private Config _configuration;
         private IMemory _memory;
@@ -61,6 +63,7 @@ namespace p4gpc.custompartypanel
             InitInBtlHook();
             InitCommandCircleHook();
             //InitCommandCircleTextHook();
+            InitDungeonHook();
         }
 
         // Initialises the arrays that store the party panel colours (so we don't do reflection 100s of times a second which presumably would be badish)
@@ -220,6 +223,21 @@ namespace p4gpc.custompartypanel
             _commandCircleTextHook = _hooks.CreateAsmHook(function, address, AsmHookBehaviour.ExecuteFirst).Activate();
         }
 
+        // Initialises the hook that changes stuff for the in dungeon party panel
+        private void InitDungeonHook()
+        {
+            long address = _utils.SigScan("E8 ?? ?? ?? ?? 8D 8E ?? ?? ?? ?? E8 ?? ?? ?? ?? 8D 8E ?? ?? ?? ?? E8 ?? ?? ?? ?? 8B 83 ?? ?? ?? ??", "dungeon party panel");
+
+            string[] function =
+            {
+                "use32",
+                $"{_hooks.Utilities.PushCdeclCallerSavedRegisters()}",
+                $"{_hooks.Utilities.GetAbsoluteCallMnemonics(SetInDungeonColours, out _setInDungeonColoursReverseWrapper)}",
+                $"{_hooks.Utilities.PopCdeclCallerSavedRegisters()}",
+            };
+            _dungeonHook = _hooks.CreateAsmHook(function, address, AsmHookBehaviour.ExecuteFirst).Activate();
+        }
+
         private void InitPartyLocation()
         {
             long address = _utils.SigScan("8B 0D ?? ?? ?? ?? B8 01 00 00 00 66 89 06 ?? ?? 0F B7 41 ??", "in party pointer");
@@ -257,6 +275,19 @@ namespace p4gpc.custompartypanel
 
         private void SetCommandCircleColour(IntPtr colourAddress, int activeMemberPos)
         {
+            PartyMember member;
+            if (activeMemberPos == 0)
+                member = PartyMember.Protagonist;
+            else
+                member = (PartyMember)GetInParty()[activeMemberPos-1];
+            
+            Colour colour = _bgColours[(int)member - 1];
+            byte[] colourBytes = { colour.R, colour.G, colour.B };
+            _memory.SafeWrite(colourAddress + 0x84, colourBytes);
+        }
+
+        private void SetInDungeonColours(IntPtr colourAddress, int activeMemberPos)
+        {
             // Get the in party address (has to be done after the game has initialised)
             if (_partyAddress == IntPtr.Zero)
             {
@@ -269,11 +300,35 @@ namespace p4gpc.custompartypanel
             if (activeMemberPos == 0)
                 member = PartyMember.Protagonist;
             else
-                member = (PartyMember)GetInParty()[activeMemberPos-1];
-            
-            Colour colour = _bgColours[(int)member - 1];
-            byte[] colourBytes = { colour.R, colour.G, colour.B };
-            _memory.SafeWrite(colourAddress + 0x84, colourBytes);
+                member = (PartyMember)GetInParty()[activeMemberPos - 1];
+
+            Colour bgColour = _bgColours[(int)member - 1];
+            DoRgbTransition(bgColour, _ogBgColours[(int)member - 1]);
+            byte[] bgColourBytes = { bgColour.R, bgColour.G, bgColour.B, 255 };
+
+            Colour fgColour = _fgColours[(int)member - 1];
+            DoRgbTransition(fgColour, _ogFgColours[(int)member - 1]);
+            byte[] fgColourBytes = { fgColour.R, fgColour.G,fgColour.B, 255 };
+
+            // Write the changed colour for the bg
+            IntPtr bgColourAddress = colourAddress + 0x274;
+            bgColourAddress += 16;
+            // There are 4 seperate instances of the colour that have to be written to change it fully (it's done in a gradient, so all have to be the same for a solid colour)
+            for(int i = 0; i< 4; i++)
+            {
+                _memory.SafeWrite(bgColourAddress, bgColourBytes);
+                bgColourAddress += 24; 
+            }
+
+            // Write the changed colours for the fg
+            IntPtr fgColourAddress = colourAddress + 0x51C;
+            fgColourAddress += 16;
+            // There are 4 seperate instances of the colour that have to be written to change it fully (it's done in a gradient, so all have to be the same for a solid colour)
+            for (int i = 0; i < 4; i++)
+            {
+                _memory.SafeWrite(fgColourAddress, fgColourBytes);
+                fgColourAddress += 24;
+            }
         }
 
         private short[] GetInParty()
@@ -341,5 +396,9 @@ namespace p4gpc.custompartypanel
         [Function(new Register[] { Register.edi, Register.ebx }, Register.eax, StackCleanup.Callee)]
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void SetCommandCircleColourFunction(IntPtr colourAddress, int activeMemberPos);
+
+        [Function(new Register[] { Register.esi, Register.eax }, Register.eax, StackCleanup.Callee)]
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void SetInDungeonColoursFunction(IntPtr colourAddress, int activeMemberPos);
     }
 }
