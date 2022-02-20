@@ -139,13 +139,13 @@ param (
     $UseGameBananaDelta = $False,
     $UseNuGetDelta = $False,
 
-    $GitHubUserName = "",
-    $GitHubRepoName = "",
+    $GitHubUserName = "AnimatedSwine37",
+    $GitHubRepoName = "p4gpc.custompartypanel",
     $GitHubFallbackPattern = "", # For migrating from legacy.
 
     $GameBananaItemId = 0, # From mod page URL.
 
-    $NuGetPackageId = "",
+    $NuGetPackageId = "p4gpc.custompartypanel",
     $NuGetFeedUrl = "",
     $NuGetAllowUnlisted = $False,
 
@@ -178,7 +178,6 @@ Split-Path $MyInvocation.MyCommand.Path | Push-Location
 # Convert Booleans
 $IsPrerelease = [bool]::Parse($IsPrerelease)
 $MakeDelta = [bool]::Parse($MakeDelta)
-$Build = [bool]::Parse($Build)
 $BuildR2R = [bool]::Parse($BuildR2R)
 $UseGitHubDelta = [bool]::Parse($UseGitHubDelta)
 $UseGameBananaDelta = [bool]::Parse($UseGameBananaDelta)
