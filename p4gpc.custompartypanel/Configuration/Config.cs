@@ -29,7 +29,7 @@ namespace p4gpc.custompartypanel.Configuration
 
         [DisplayName("Protagonist Background Colour")]
         [Description("The colour of the background of the Protagonist's party panel")]
-        public Colour ProtagonistBgColour { get; set; } = new Colour(131, 134, 139);
+        public Colour ProtagonistBgColour { get; set; } = new Colour(85, 87, 91);
 
         // Yosuke
         [DisplayName("Yosuke Foreground Colour")]
@@ -38,7 +38,7 @@ namespace p4gpc.custompartypanel.Configuration
 
         [DisplayName("Yosuke Background Colour")]
         [Description("The colour of the background of Yosuke's party panel")]
-        public Colour YosukeBgColour { get; set; } = new Colour(210, 142, 87);
+        public Colour YosukeBgColour { get; set; } = new Colour(142, 90, 49);
 
         // Chie
         [DisplayName("Chie Foreground Colour")]
@@ -47,7 +47,7 @@ namespace p4gpc.custompartypanel.Configuration
 
         [DisplayName("Chie Background Colour")]
         [Description("The colour of the background of Chie's party panel")]
-        public Colour ChieBgColour { get; set; } = new Colour(108, 169, 77);
+        public Colour ChieBgColour { get; set; } = new Colour(67, 112, 44);
 
         // Yukiko
         [DisplayName("Yukiko Foreground Colour")]
@@ -56,7 +56,7 @@ namespace p4gpc.custompartypanel.Configuration
 
         [DisplayName("Yukiko Background Colour")]
         [Description("The colour of the background of Yukiko's party panel")]
-        public Colour YukikoBgColour { get; set; } = new Colour(210, 56, 49);
+        public Colour YukikoBgColour { get; set; } = new Colour(147, 32, 27);
 
         // Kanji
         [DisplayName("Kanji Foreground Colour")]
@@ -65,7 +65,7 @@ namespace p4gpc.custompartypanel.Configuration
 
         [DisplayName("Kanji Background Colour")]
         [Description("The colour of the background of Kanji's party panel")]
-        public Colour KanjiBgColour { get; set; } = new Colour(208, 185, 127);
+        public Colour KanjiBgColour { get; set; } = new Colour(137, 120, 77);
 
         // Naoto
         [DisplayName("Naoto Foreground Colour")]
@@ -74,7 +74,7 @@ namespace p4gpc.custompartypanel.Configuration
 
         [DisplayName("Naoto Background Colour")]
         [Description("The colour of the background of Naoto's party panel")]
-        public Colour NaotoBgColour { get; set; } = new Colour(70, 70, 131);
+        public Colour NaotoBgColour { get; set; } = new Colour(46, 46, 91);
 
         // Teddie
         [DisplayName("Teddie Foreground Colour")]
@@ -83,6 +83,6 @@ namespace p4gpc.custompartypanel.Configuration
 
         [DisplayName("Teddie Background Colour")]
         [Description("The colour of the background of Teddie's party panel")]
-        public Colour TeddieBgColour { get; set; } = new Colour(247, 170, 148);
+        public Colour TeddieBgColour { get; set; } = new Colour(166, 109, 92);
     }
 }
