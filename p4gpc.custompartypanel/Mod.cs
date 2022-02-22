@@ -23,6 +23,7 @@ namespace p4gpc.custompartypanel
         private IAsmHook _inBtlBgHook;
         private IAsmHook _inBtlHpBarHook;
         private IAsmHook _commandCircleHook;
+        private IAsmHook _commandCircleFadeHook;
         private IAsmHook _commandCircleTextHook;
         private IAsmHook _dungeonHook;
 
@@ -206,6 +207,8 @@ namespace p4gpc.custompartypanel
                 $"add esp, 16", // re-align the stack
             };
             _commandCircleHook = _hooks.CreateAsmHook(function, address, AsmHookBehaviour.ExecuteFirst).Activate();
+            // Hook for when the circle fades in/out after switching characters
+            _commandCircleFadeHook = _hooks.CreateAsmHook(function, address + 0xE3, AsmHookBehaviour.ExecuteFirst).Activate(); 
         }
 
         // Initialise the hook for changing the colour of the text around the command circle
@@ -364,6 +367,7 @@ namespace p4gpc.custompartypanel
             _inBtlFgHook?.Enable();
             _inBtlHpBarHook?.Enable();
             _commandCircleHook?.Enable();
+            _commandCircleFadeHook?.Enable();
         }
 
         public void Suspend()
@@ -372,6 +376,7 @@ namespace p4gpc.custompartypanel
             _inBtlFgHook?.Disable();
             _inBtlHpBarHook?.Disable();
             _commandCircleHook?.Disable();
+            _commandCircleFadeHook?.Disable();
         }
 
         public void UpdateConfiguration(Config configuration)
