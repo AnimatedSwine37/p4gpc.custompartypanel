@@ -9,6 +9,7 @@ using Reloaded.Mod.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using static p4gpc.tinyadditions.P4GEnums;
 using static Reloaded.Hooks.Definitions.X86.FunctionAttribute;
 
@@ -58,11 +59,13 @@ namespace p4gpc.custompartypanel
             _utils = utils;
             _hooks = hooks;
 
-            InitPartyLocation();
-            InitColourArrays();
-            InitInBtlHook();
-            InitCommandCircleHook();
-            InitDungeonHook();
+            List<Task> initTasks = new List<Task>();
+            initTasks.Add(Task.Run(() => InitPartyLocation()));
+            initTasks.Add(Task.Run(() => InitColourArrays()));
+            initTasks.Add(Task.Run(() => InitInBtlHook()));
+            initTasks.Add(Task.Run(() => InitCommandCircleHook()));
+            initTasks.Add(Task.Run(() => InitDungeonHook()));
+            Task.WaitAll(initTasks.ToArray());
         }
 
         // Initialises the arrays that store the party panel colours (so we don't do reflection 100s of times a second which presumably would be badish)
