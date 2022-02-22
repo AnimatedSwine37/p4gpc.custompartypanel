@@ -119,63 +119,39 @@ namespace p4gpc.custompartypanel
             string[] fgFunction =
             {
                 "use32",
-                // Save xmm0 (will be unintentionally altered)
-                $"sub esp, 16", // allocate space on stack
-                $"movdqu dqword [esp], xmm0",
-                // Save xmm3
-                $"sub esp, 16", // allocate space on stack
-                $"movdqu dqword [esp], xmm3",
+                $"{Utils.PushXmm(0)}",
+                $"{Utils.PushXmm(3)}",
                 $"{_hooks.Utilities.PushCdeclCallerSavedRegisters()}",
                 $"{_hooks.Utilities.GetAbsoluteCallMnemonics(SetFgColour, out _setFgColourReverseWrapper)}",
                 $"{_hooks.Utilities.PopCdeclCallerSavedRegisters()}",
-                //Pop back the value from stack to xmm3
-                $"movdqu xmm3, dqword [esp]",
-                $"add esp, 16", // re-align the stack
-                //Pop back the value from stack to xmm0
-                $"movdqu xmm0, dqword [esp]",
-                $"add esp, 16", // re-align the stack
+                $"{Utils.PopXmm(3)}",
+                $"{Utils.PopXmm(0)}",
             };
             _inBtlFgHook = _hooks.CreateAsmHook(fgFunction, address - 10, AsmHookBehaviour.ExecuteAfter).Activate();
 
             string[] bgFunction =
             {
                 "use32",
-                // Save xmm0 (will be unintentionally altered)
-                $"sub esp, 16", // allocate space on stack
-                $"movdqu dqword [esp], xmm0",
-                // Save xmm3
-                $"sub esp, 16", // allocate space on stack
-                $"movdqu dqword [esp], xmm3",
+                $"{Utils.PushXmm(0)}",
+                $"{Utils.PushXmm(3)}",
                 $"{_hooks.Utilities.PushCdeclCallerSavedRegisters()}",
                 $"{_hooks.Utilities.GetAbsoluteCallMnemonics(SetBgColour, out _setBgColourReverseWrapper)}",
                 $"{_hooks.Utilities.PopCdeclCallerSavedRegisters()}",
-                //Pop back the value from stack to xmm3
-                $"movdqu xmm3, dqword [esp]",
-                $"add esp, 16", // re-align the stack
-                //Pop back the value from stack to xmm0
-                $"movdqu xmm0, dqword [esp]",
-                $"add esp, 16", // re-align the stack
+                $"{Utils.PopXmm(3)}",
+                $"{Utils.PopXmm(0)}",
             };
             _inBtlBgHook = _hooks.CreateAsmHook(bgFunction, address - 0x96, AsmHookBehaviour.ExecuteAfter).Activate();
 
             string[] hpBgFunction =
             {
                 "use32",
-                // Save xmm0 (will be unintentionally altered)
-                $"sub esp, 16", // allocate space on stack
-                $"movdqu dqword [esp], xmm0",
-                // Save xmm3
-                $"sub esp, 16", // allocate space on stack
-                $"movdqu dqword [esp], xmm3",
+                $"{Utils.PushXmm(0)}",
+                $"{Utils.PushXmm(3)}",
                 $"{_hooks.Utilities.PushCdeclCallerSavedRegisters()}",
                 $"{_hooks.Utilities.GetAbsoluteCallMnemonics(SetHpOutlineColour, out _setHpBgColourReverseWrapper)}",
                 $"{_hooks.Utilities.PopCdeclCallerSavedRegisters()}",
-                //Pop back the value from stack to xmm3
-                $"movdqu xmm3, dqword [esp]",
-                $"add esp, 16", // re-align the stack
-                //Pop back the value from stack to xmm0
-                $"movdqu xmm0, dqword [esp]",
-                $"add esp, 16", // re-align the stack
+                $"{Utils.PopXmm(3)}",
+                $"{Utils.PopXmm(0)}",
             };
             _inBtlHpBarHook = _hooks.CreateAsmHook(hpBgFunction, address + 0x324, AsmHookBehaviour.ExecuteAfter).Activate();
         }
@@ -190,21 +166,13 @@ namespace p4gpc.custompartypanel
             string[] function =
             {
                 "use32",
-                // Save xmm0 (will be unintentionally altered)
-                $"sub esp, 16", // allocate space on stack
-                $"movdqu dqword [esp], xmm0",
-                // Save xmm3
-                $"sub esp, 16", // allocate space on stack
-                $"movdqu dqword [esp], xmm3",
+                $"{Utils.PushXmm(0)}",
+                $"{Utils.PushXmm(3)}",
                 $"{_hooks.Utilities.PushCdeclCallerSavedRegisters()}",
                 $"{_setCommandCircleColourCall}",
                 $"{_hooks.Utilities.PopCdeclCallerSavedRegisters()}",
-                //Pop back the value from stack to xmm3
-                $"movdqu xmm3, dqword [esp]",
-                $"add esp, 16", // re-align the stack
-                //Pop back the value from stack to xmm0
-                $"movdqu xmm0, dqword [esp]",
-                $"add esp, 16", // re-align the stack
+                $"{Utils.PopXmm(3)}",
+                $"{Utils.PopXmm(0)}",
             };
             _commandCircleHook = _hooks.CreateAsmHook(function, address, AsmHookBehaviour.ExecuteFirst).Activate();
             // Hook for when the circle fades in/out after switching characters
