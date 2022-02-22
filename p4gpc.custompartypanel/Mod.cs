@@ -24,7 +24,6 @@ namespace p4gpc.custompartypanel
         private IAsmHook _inBtlHpBarHook;
         private IAsmHook _commandCircleHook;
         private IAsmHook _commandCircleFadeHook;
-        private IAsmHook _commandCircleTextHook;
         private IAsmHook _dungeonHook;
 
         private string _setCommandCircleColourCall;
@@ -63,7 +62,6 @@ namespace p4gpc.custompartypanel
             InitColourArrays();
             InitInBtlHook();
             InitCommandCircleHook();
-            //InitCommandCircleTextHook();
             InitDungeonHook();
         }
 
@@ -177,21 +175,6 @@ namespace p4gpc.custompartypanel
             _commandCircleHook = _hooks.CreateAsmHook(function, address, AsmHookBehaviour.ExecuteFirst).Activate();
             // Hook for when the circle fades in/out after switching characters
             _commandCircleFadeHook = _hooks.CreateAsmHook(function, address + 0xE3, AsmHookBehaviour.ExecuteFirst).Activate(); 
-        }
-
-        // Initialise the hook for changing the colour of the text around the command circle
-        private void InitCommandCircleTextHook()
-        {
-            long address = _utils.SigScan("E8 ?? ?? ?? ?? 83 C4 08 66 C7 87 ?? ?? ?? ?? FF FF 33 C9 C6 87 ?? ?? ?? ?? FF C6 47 ?? 00 E8 ?? ?? ?? ?? 33 C0", "command circle text");
-
-            string[] function =
-            {
-                "use32",
-                $"{_hooks.Utilities.PushCdeclCallerSavedRegisters()}",
-                $"{_setCommandCircleColourCall}",
-                $"{_hooks.Utilities.PopCdeclCallerSavedRegisters()}",
-            };
-            _commandCircleTextHook = _hooks.CreateAsmHook(function, address, AsmHookBehaviour.ExecuteFirst).Activate();
         }
 
         // Initialises the hook that changes stuff for the in dungeon party panel
