@@ -16,10 +16,6 @@ namespace p4gpc.custompartypanel
         private ILogger _logger;
         private int _baseAddress;
         private IMemory _memory;
-        private IntPtr _flagLocation;
-        private IntPtr _eventLocation;
-        private IntPtr _inMenuLocation;
-        private IntPtr _itemLocation;
 
         public Utils(Config configuration, ILogger logger, IMemory memory)
         {
