@@ -259,6 +259,9 @@ namespace p4gpc.custompartypanel
             else
                 member = (PartyMember)GetInParty()[activeMemberPos - 1];
 
+            if (member == 0)
+                return;
+
             Colour bgColour = _bgColours[(int)member - 1];
             DoRgbTransition(bgColour, _ogBgColours[(int)member - 1]);
             byte[] bgColourBytes = { bgColour.R, bgColour.G, bgColour.B, 255 };
