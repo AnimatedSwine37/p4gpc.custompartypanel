@@ -2,7 +2,7 @@
   "ModId": "p4gpc.custompartypanel",
   "ModName": "Persona 4 Golden Custom Party Panel",
   "ModAuthor": "AnimatedSwine37, MeovvCAT",
-  "ModVersion": "1.1.1",
+  "ModVersion": "1.1.2",
   "ModDescription": "Allows customisation of hardcoded elements of the party panel",
   "ModDll": "p4gpc.custompartypanel.dll",
   "ModIcon": "Preview.png",
